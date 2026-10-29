@@ -1,0 +1,13 @@
+# Unreal Engine generated files
+Binaries/
+DerivedDataCache/
+Intermediate/
+Saved/
+
+# IDE and OS files
+.vs/
+.vscode/
+*.sln
+*.suo
+*.user
+.DS_Store

@@ -1,0 +1,879 @@
+{
+	"folders": [
+		{
+			"name": "WizardOs",
+			"path": "."
+		},
+		{
+			"name": "UE5",
+			"path": "/var/home/connor/UnrealEngine"
+		}
+	],
+	"settings": {
+		"js/ts.tsc.autoDetect": "off",
+		"npm.autoDetect": "off",
+		"terminal.integrated.env.linux": {
+			"PATH": "/var/home/connor/UnrealEngine/Engine/Binaries/ThirdParty/DotNet/10.0/linux-x64:${env:PATH}",
+			"DOTNET_ROOT": "/var/home/connor/UnrealEngine/Engine/Binaries/ThirdParty/DotNet/10.0/linux-x64",
+			"DOTNET_HOST_PATH": "/var/home/connor/UnrealEngine/Engine/Binaries/ThirdParty/DotNet/10.0/linux-x64/dotnet",
+			"DOTNET_MULTILEVEL_LOOKUP": "0",
+			"DOTNET_ROLL_FORWARD": "LatestMajor"
+		}
+	},
+	"extensions": {
+		"recommendations": [
+			"ms-vscode.cpptools",
+			"ms-dotnettools.csharp"
+		]
+	},
+	"tasks": {
+		"version": "2.0.0",
+		"tasks": [
+			{
+				"label": "WizardOs Linux Debug Build",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"WizardOs",
+					"Linux",
+					"Debug",
+					"/home/connor/Documents/Unreal Projects/WizardOs/WizardOs.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/var/home/connor/UnrealEngine"
+				}
+			},
+			{
+				"label": "WizardOs Linux Debug Rebuild",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"WizardOs",
+					"Linux",
+					"Debug",
+					"/home/connor/Documents/Unreal Projects/WizardOs/WizardOs.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"dependsOn": [
+					"WizardOs Linux Debug Clean"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/var/home/connor/UnrealEngine"
+				}
+			},
+			{
+				"label": "WizardOs Linux Debug Clean",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"WizardOs",
+					"Linux",
+					"Debug",
+					"/home/connor/Documents/Unreal Projects/WizardOs/WizardOs.uproject",
+					"-waitmutex",
+					"-clean"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/var/home/connor/UnrealEngine"
+				}
+			},
+			{
+				"label": "WizardOs Linux DebugGame Build",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"WizardOs",
+					"Linux",
+					"DebugGame",
+					"/home/connor/Documents/Unreal Projects/WizardOs/WizardOs.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/var/home/connor/UnrealEngine"
+				}
+			},
+			{
+				"label": "WizardOs Linux DebugGame Rebuild",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"WizardOs",
+					"Linux",
+					"DebugGame",
+					"/home/connor/Documents/Unreal Projects/WizardOs/WizardOs.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"dependsOn": [
+					"WizardOs Linux DebugGame Clean"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/var/home/connor/UnrealEngine"
+				}
+			},
+			{
+				"label": "WizardOs Linux DebugGame Clean",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"WizardOs",
+					"Linux",
+					"DebugGame",
+					"/home/connor/Documents/Unreal Projects/WizardOs/WizardOs.uproject",
+					"-waitmutex",
+					"-clean"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/var/home/connor/UnrealEngine"
+				}
+			},
+			{
+				"label": "WizardOs Linux Development Build",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"WizardOs",
+					"Linux",
+					"Development",
+					"/home/connor/Documents/Unreal Projects/WizardOs/WizardOs.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/var/home/connor/UnrealEngine"
+				}
+			},
+			{
+				"label": "WizardOs Linux Development Rebuild",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"WizardOs",
+					"Linux",
+					"Development",
+					"/home/connor/Documents/Unreal Projects/WizardOs/WizardOs.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"dependsOn": [
+					"WizardOs Linux Development Clean"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/var/home/connor/UnrealEngine"
+				}
+			},
+			{
+				"label": "WizardOs Linux Development Clean",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"WizardOs",
+					"Linux",
+					"Development",
+					"/home/connor/Documents/Unreal Projects/WizardOs/WizardOs.uproject",
+					"-waitmutex",
+					"-clean"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/var/home/connor/UnrealEngine"
+				}
+			},
+			{
+				"label": "WizardOs Linux Test Build",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"WizardOs",
+					"Linux",
+					"Test",
+					"/home/connor/Documents/Unreal Projects/WizardOs/WizardOs.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/var/home/connor/UnrealEngine"
+				}
+			},
+			{
+				"label": "WizardOs Linux Test Rebuild",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"WizardOs",
+					"Linux",
+					"Test",
+					"/home/connor/Documents/Unreal Projects/WizardOs/WizardOs.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"dependsOn": [
+					"WizardOs Linux Test Clean"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/var/home/connor/UnrealEngine"
+				}
+			},
+			{
+				"label": "WizardOs Linux Test Clean",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"WizardOs",
+					"Linux",
+					"Test",
+					"/home/connor/Documents/Unreal Projects/WizardOs/WizardOs.uproject",
+					"-waitmutex",
+					"-clean"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/var/home/connor/UnrealEngine"
+				}
+			},
+			{
+				"label": "WizardOs Linux Shipping Build",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"WizardOs",
+					"Linux",
+					"Shipping",
+					"/home/connor/Documents/Unreal Projects/WizardOs/WizardOs.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/var/home/connor/UnrealEngine"
+				}
+			},
+			{
+				"label": "WizardOs Linux Shipping Rebuild",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"WizardOs",
+					"Linux",
+					"Shipping",
+					"/home/connor/Documents/Unreal Projects/WizardOs/WizardOs.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"dependsOn": [
+					"WizardOs Linux Shipping Clean"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/var/home/connor/UnrealEngine"
+				}
+			},
+			{
+				"label": "WizardOs Linux Shipping Clean",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"WizardOs",
+					"Linux",
+					"Shipping",
+					"/home/connor/Documents/Unreal Projects/WizardOs/WizardOs.uproject",
+					"-waitmutex",
+					"-clean"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/var/home/connor/UnrealEngine"
+				}
+			},
+			{
+				"label": "WizardOs LinuxArm64 Debug Build",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"WizardOs",
+					"LinuxArm64",
+					"Debug",
+					"/home/connor/Documents/Unreal Projects/WizardOs/WizardOs.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/var/home/connor/UnrealEngine"
+				}
+			},
+			{
+				"label": "WizardOs LinuxArm64 Debug Rebuild",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"WizardOs",
+					"LinuxArm64",
+					"Debug",
+					"/home/connor/Documents/Unreal Projects/WizardOs/WizardOs.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"dependsOn": [
+					"WizardOs LinuxArm64 Debug Clean"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/var/home/connor/UnrealEngine"
+				}
+			},
+			{
+				"label": "WizardOs LinuxArm64 Debug Clean",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"WizardOs",
+					"LinuxArm64",
+					"Debug",
+					"/home/connor/Documents/Unreal Projects/WizardOs/WizardOs.uproject",
+					"-waitmutex",
+					"-clean"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/var/home/connor/UnrealEngine"
+				}
+			},
+			{
+				"label": "WizardOs LinuxArm64 DebugGame Build",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"WizardOs",
+					"LinuxArm64",
+					"DebugGame",
+					"/home/connor/Documents/Unreal Projects/WizardOs/WizardOs.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/var/home/connor/UnrealEngine"
+				}
+			},
+			{
+				"label": "WizardOs LinuxArm64 DebugGame Rebuild",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"WizardOs",
+					"LinuxArm64",
+					"DebugGame",
+					"/home/connor/Documents/Unreal Projects/WizardOs/WizardOs.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"dependsOn": [
+					"WizardOs LinuxArm64 DebugGame Clean"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/var/home/connor/UnrealEngine"
+				}
+			},
+			{
+				"label": "WizardOs LinuxArm64 DebugGame Clean",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"WizardOs",
+					"LinuxArm64",
+					"DebugGame",
+					"/home/connor/Documents/Unreal Projects/WizardOs/WizardOs.uproject",
+					"-waitmutex",
+					"-clean"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/var/home/connor/UnrealEngine"
+				}
+			},
+			{
+				"label": "WizardOs LinuxArm64 Development Build",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"WizardOs",
+					"LinuxArm64",
+					"Development",
+					"/home/connor/Documents/Unreal Projects/WizardOs/WizardOs.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/var/home/connor/UnrealEngine"
+				}
+			},
+			{
+				"label": "WizardOs LinuxArm64 Development Rebuild",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"WizardOs",
+					"LinuxArm64",
+					"Development",
+					"/home/connor/Documents/Unreal Projects/WizardOs/WizardOs.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"dependsOn": [
+					"WizardOs LinuxArm64 Development Clean"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/var/home/connor/UnrealEngine"
+				}
+			},
+			{
+				"label": "WizardOs LinuxArm64 Development Clean",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"WizardOs",
+					"LinuxArm64",
+					"Development",
+					"/home/connor/Documents/Unreal Projects/WizardOs/WizardOs.uproject",
+					"-waitmutex",
+					"-clean"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/var/home/connor/UnrealEngine"
+				}
+			},
+			{
+				"label": "WizardOs LinuxArm64 Test Build",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"WizardOs",
+					"LinuxArm64",
+					"Test",
+					"/home/connor/Documents/Unreal Projects/WizardOs/WizardOs.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/var/home/connor/UnrealEngine"
+				}
+			},
+			{
+				"label": "WizardOs LinuxArm64 Test Rebuild",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"WizardOs",
+					"LinuxArm64",
+					"Test",
+					"/home/connor/Documents/Unreal Projects/WizardOs/WizardOs.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"dependsOn": [
+					"WizardOs LinuxArm64 Test Clean"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/var/home/connor/UnrealEngine"
+				}
+			},
+			{
+				"label": "WizardOs LinuxArm64 Test Clean",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"WizardOs",
+					"LinuxArm64",
+					"Test",
+					"/home/connor/Documents/Unreal Projects/WizardOs/WizardOs.uproject",
+					"-waitmutex",
+					"-clean"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/var/home/connor/UnrealEngine"
+				}
+			},
+			{
+				"label": "WizardOs LinuxArm64 Shipping Build",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"WizardOs",
+					"LinuxArm64",
+					"Shipping",
+					"/home/connor/Documents/Unreal Projects/WizardOs/WizardOs.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/var/home/connor/UnrealEngine"
+				}
+			},
+			{
+				"label": "WizardOs LinuxArm64 Shipping Rebuild",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"WizardOs",
+					"LinuxArm64",
+					"Shipping",
+					"/home/connor/Documents/Unreal Projects/WizardOs/WizardOs.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"dependsOn": [
+					"WizardOs LinuxArm64 Shipping Clean"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/var/home/connor/UnrealEngine"
+				}
+			},
+			{
+				"label": "WizardOs LinuxArm64 Shipping Clean",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"WizardOs",
+					"LinuxArm64",
+					"Shipping",
+					"/home/connor/Documents/Unreal Projects/WizardOs/WizardOs.uproject",
+					"-waitmutex",
+					"-clean"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/var/home/connor/UnrealEngine"
+				}
+			},
+			{
+				"label": "WizardOsEditor Linux Debug Build",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"WizardOsEditor",
+					"Linux",
+					"Debug",
+					"/home/connor/Documents/Unreal Projects/WizardOs/WizardOs.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/var/home/connor/UnrealEngine"
+				}
+			},
+			{
+				"label": "WizardOsEditor Linux Debug Rebuild",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"WizardOsEditor",
+					"Linux",
+					"Debug",
+					"/home/connor/Documents/Unreal Projects/WizardOs/WizardOs.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"dependsOn": [
+					"WizardOsEditor Linux Debug Clean"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/var/home/connor/UnrealEngine"
+				}
+			},
+			{
+				"label": "WizardOsEditor Linux Debug Clean",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"WizardOsEditor",
+					"Linux",
+					"Debug",
+					"/home/connor/Documents/Unreal Projects/WizardOs/WizardOs.uproject",
+					"-waitmutex",
+					"-clean"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/var/home/connor/UnrealEngine"
+				}
+			},
+			{
+				"label": "WizardOsEditor Linux DebugGame Build",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"WizardOsEditor",
+					"Linux",
+					"DebugGame",
+					"/home/connor/Documents/Unreal Projects/WizardOs/WizardOs.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/var/home/connor/UnrealEngine"
+				}
+			},
+			{
+				"label": "WizardOsEditor Linux DebugGame Rebuild",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"WizardOsEditor",
+					"Linux",
+					"DebugGame",
+					"/home/connor/Documents/Unreal Projects/WizardOs/WizardOs.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"dependsOn": [
+					"WizardOsEditor Linux DebugGame Clean"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/var/home/connor/UnrealEngine"
+				}
+			},
+			{
+				"label": "WizardOsEditor Linux DebugGame Clean",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"WizardOsEditor",
+					"Linux",
+					"DebugGame",
+					"/home/connor/Documents/Unreal Projects/WizardOs/WizardOs.uproject",
+					"-waitmutex",
+					"-clean"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/var/home/connor/UnrealEngine"
+				}
+			},
+			{
+				"label": "WizardOsEditor Linux Development Build",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"WizardOsEditor",
+					"Linux",
+					"Development",
+					"/home/connor/Documents/Unreal Projects/WizardOs/WizardOs.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/var/home/connor/UnrealEngine"
+				}
+			},
+			{
+				"label": "WizardOsEditor Linux Development Rebuild",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"WizardOsEditor",
+					"Linux",
+					"Development",
+					"/home/connor/Documents/Unreal Projects/WizardOs/WizardOs.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"dependsOn": [
+					"WizardOsEditor Linux Development Clean"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/var/home/connor/UnrealEngine"
+				}
+			},
+			{
+				"label": "WizardOsEditor Linux Development Clean",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"WizardOsEditor",
+					"Linux",
+					"Development",
+					"/home/connor/Documents/Unreal Projects/WizardOs/WizardOs.uproject",
+					"-waitmutex",
+					"-clean"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/var/home/connor/UnrealEngine"
+				}
+			}
+		]
+	},
+	"launch": {
+		"version": "0.2.0",
+		"configurations": [
+			{
+				"name": "Launch WizardOs (Debug)",
+				"request": "launch",
+				"program": "/home/connor/Documents/Unreal Projects/WizardOs/Binaries/Linux/UnrealGame-Linux-Debug",
+				"preLaunchTask": "WizardOs Linux Debug Build",
+				"args": [
+				],
+				"cwd": "/var/home/connor/UnrealEngine",
+				"type": "cppdbg",
+				"visualizerFile": "/var/home/connor/UnrealEngine/Engine/Extras/VisualStudioDebugging/Unreal.natvis",
+				"showDisplayString": true
+			},
+			{
+				"name": "Launch WizardOs (DebugGame)",
+				"request": "launch",
+				"program": "/home/connor/Documents/Unreal Projects/WizardOs/Binaries/Linux/UnrealGame-Linux-DebugGame",
+				"preLaunchTask": "WizardOs Linux DebugGame Build",
+				"args": [
+				],
+				"cwd": "/var/home/connor/UnrealEngine",
+				"type": "cppdbg",
+				"visualizerFile": "/var/home/connor/UnrealEngine/Engine/Extras/VisualStudioDebugging/Unreal.natvis",
+				"showDisplayString": true
+			},
+			{
+				"name": "Launch WizardOs (Development)",
+				"request": "launch",
+				"program": "/home/connor/Documents/Unreal Projects/WizardOs/Binaries/Linux/UnrealGame",
+				"preLaunchTask": "WizardOs Linux Development Build",
+				"args": [
+				],
+				"cwd": "/var/home/connor/UnrealEngine",
+				"type": "cppdbg",
+				"visualizerFile": "/var/home/connor/UnrealEngine/Engine/Extras/VisualStudioDebugging/Unreal.natvis",
+				"showDisplayString": true
+			},
+			{
+				"name": "Launch WizardOs (Test)",
+				"request": "launch",
+				"program": "/home/connor/Documents/Unreal Projects/WizardOs/Binaries/Linux/UnrealGame-Linux-Test",
+				"preLaunchTask": "WizardOs Linux Test Build",
+				"args": [
+				],
+				"cwd": "/var/home/connor/UnrealEngine",
+				"type": "cppdbg",
+				"visualizerFile": "/var/home/connor/UnrealEngine/Engine/Extras/VisualStudioDebugging/Unreal.natvis",
+				"showDisplayString": true
+			},
+			{
+				"name": "Launch WizardOs (Shipping)",
+				"request": "launch",
+				"program": "/home/connor/Documents/Unreal Projects/WizardOs/Binaries/Linux/UnrealGame-Linux-Shipping",
+				"preLaunchTask": "WizardOs Linux Shipping Build",
+				"args": [
+				],
+				"cwd": "/var/home/connor/UnrealEngine",
+				"type": "cppdbg",
+				"visualizerFile": "/var/home/connor/UnrealEngine/Engine/Extras/VisualStudioDebugging/Unreal.natvis",
+				"showDisplayString": true
+			},
+			{
+				"name": "Launch WizardOsEditor (Debug)",
+				"request": "launch",
+				"program": "/var/home/connor/UnrealEngine/Engine/Binaries/Linux/UnrealEditor-Linux-Debug",
+				"preLaunchTask": "WizardOsEditor Linux Debug Build",
+				"args": [
+					"/home/connor/Documents/Unreal Projects/WizardOs/WizardOs.uproject"
+				],
+				"cwd": "/var/home/connor/UnrealEngine",
+				"type": "cppdbg",
+				"visualizerFile": "/var/home/connor/UnrealEngine/Engine/Extras/VisualStudioDebugging/Unreal.natvis",
+				"showDisplayString": true
+			},
+			{
+				"name": "Launch WizardOsEditor (DebugGame)",
+				"request": "launch",
+				"program": "/var/home/connor/UnrealEngine/Engine/Binaries/Linux/UnrealEditor-Linux-DebugGame",
+				"preLaunchTask": "WizardOsEditor Linux DebugGame Build",
+				"args": [
+					"/home/connor/Documents/Unreal Projects/WizardOs/WizardOs.uproject"
+				],
+				"cwd": "/var/home/connor/UnrealEngine",
+				"type": "cppdbg",
+				"visualizerFile": "/var/home/connor/UnrealEngine/Engine/Extras/VisualStudioDebugging/Unreal.natvis",
+				"showDisplayString": true
+			},
+			{
+				"name": "Launch WizardOsEditor (Development)",
+				"request": "launch",
+				"program": "/var/home/connor/UnrealEngine/Engine/Binaries/Linux/UnrealEditor",
+				"preLaunchTask": "WizardOsEditor Linux Development Build",
+				"args": [
+					"/home/connor/Documents/Unreal Projects/WizardOs/WizardOs.uproject"
+				],
+				"cwd": "/var/home/connor/UnrealEngine",
+				"type": "cppdbg",
+				"visualizerFile": "/var/home/connor/UnrealEngine/Engine/Extras/VisualStudioDebugging/Unreal.natvis",
+				"showDisplayString": true
+			},
+			{
+				"name": "Generate Project Files",
+				"type": "coreclr",
+				"request": "launch",
+				"preLaunchTask": "UnrealBuildTool Linux Development Build",
+				"program": "/var/home/connor/UnrealEngine/Engine/Build/BatchFiles/RunUBT.sh",
+				"args": [
+					"-projectfiles",
+					"-vscode",
+					"-project=/home/connor/Documents/Unreal Projects/WizardOs/WizardOs.uproject",
+					"-game",
+					"-engine",
+					"-dotnet"
+				],
+				"env": {
+					"PATH": "/var/home/connor/UnrealEngine/Engine/Binaries/ThirdParty/DotNet/10.0/linux-x64:${env:PATH}",
+					"DOTNET_ROOT": "/var/home/connor/UnrealEngine/Engine/Binaries/ThirdParty/DotNet/10.0/linux-x64",
+					"DOTNET_HOST_PATH": "/var/home/connor/UnrealEngine/Engine/Binaries/ThirdParty/DotNet/10.0/linux-x64/dotnet",
+					"DOTNET_MULTILEVEL_LOOKUP": "0",
+					"DOTNET_ROLL_FORWARD": "LatestMajor"
+				},
+				"console": "internalConsole",
+				"internalConsoleOptions": "openOnSessionStart",
+				"stopAtEntry": false,
+				"cwd": "/var/home/connor/UnrealEngine"
+			}
+		]
+	}
+}
