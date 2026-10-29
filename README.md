@@ -8,7 +8,7 @@ The wave-reward card UI is being designed in Figma:
 
 [Open the WizardOs Wave Reward UI in Figma](https://www.figma.com/design/DFero89DjuGaDe8M87dKTp/WizardOs-%E2%80%94-Wave-Reward-UI?node-id=0-1&t=GMSE4O7uarcGM20g-1)
 
-The design is a work in progress and may change as the game UI is implemented.
+The design is a work in progress and will change as the game UI is implemented.
 
 ## Requirements
 
