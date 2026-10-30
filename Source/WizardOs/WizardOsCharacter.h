@@ -11,6 +11,8 @@ class USpringArmComponent;
 class AWizardOsEnemy;
 class UWizardOsHealthBar;
 class UWizardOsAbilityWidget;
+class UWizardOsHomeWidget;
+class UWizardOsMerchantWidget;
 class UWizardOsWaveWidget;
 
 /**
@@ -61,11 +63,25 @@ private:
 	TObjectPtr<UWizardOsAbilityWidget> AbilityWidget;
 
 	UPROPERTY()
+	TObjectPtr<UWizardOsHomeWidget> HomeWidget;
+
+	UPROPERTY()
+	TObjectPtr<UWizardOsMerchantWidget> MerchantWidget;
+
+	UPROPERTY()
 	TObjectPtr<UWizardOsWaveWidget> WaveWidget;
 
 	int32 CurrentWave = 1;
 	int32 RemainingEnemies = 0;
+	int32 PocketChips = 0;
 	bool bWaitingForUpgrade = false;
+	bool bGameStarted = false;
+	bool bHasChainSpark = false;
+	bool bHasRunebomb = false;
+	bool bHasTwinCast = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Merchant", meta=(AllowPrivateAccess="true", ClampMin="0.0", ClampMax="1.0"))
+	float MerchantVisitChance = 0.35f;
 
 public:
 
@@ -90,7 +106,12 @@ public:
 
 	/** Applies one option from the post-kill upgrade choice screen. */
 	void ApplyAbility(int32 AbilityIndex);
-	void NotifyEnemyDefeated();
+	void NotifyEnemyDefeated(int32 ChipsEarned);
+	void BuyMerchantItem(int32 ItemIndex);
+	void LeaveMerchant();
+	void StartGameFromHome();
+	int32 GetPocketChips() const { return PocketChips; }
+	bool IsMerchantItemOwned(int32 ItemIndex) const;
 
 	/** Returns the camera component **/
 	UCameraComponent* GetTopDownCameraComponent() const { return TopDownCameraComponent.Get(); }
@@ -107,6 +128,9 @@ private:
 	void UpdateHealthBar();
 	void StartCurrentWave();
 	void UpdateWaveWidget();
+	void ShowHomeScreen();
+	void ShowMerchant();
+	void ContinueToNextWave();
 	bool IsEnemyVisibleOnScreen(const AWizardOsEnemy* Enemy) const;
 	bool FindSafeEnemySpawnLocation(FVector& OutLocation) const;
 };

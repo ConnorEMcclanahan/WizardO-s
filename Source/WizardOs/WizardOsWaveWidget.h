@@ -13,7 +13,7 @@ class UWizardOsWaveWidget : public UUserWidget
 	GENERATED_BODY()
 
 public:
-	void SetWave(int32 WaveNumber, bool bIsBossWave);
+	void SetWave(int32 WaveNumber, bool bIsBossWave, int32 ChipCount);
 
 protected:
 	virtual int32 NativePaint(const FPaintArgs& Args, const FGeometry& AllottedGeometry,

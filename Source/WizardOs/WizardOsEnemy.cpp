@@ -143,7 +143,7 @@ void AWizardOsEnemy::TakeWizardDamage(float Damage)
 	{
 		if (TargetPlayer)
 		{
-			TargetPlayer->NotifyEnemyDefeated();
+			TargetPlayer->NotifyEnemyDefeated(bIsBoss ? 3 : 1);
 		}
 		Destroy();
 	}

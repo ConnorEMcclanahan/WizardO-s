@@ -5,11 +5,12 @@
 #include "Rendering/DrawElements.h"
 #include "Styling/CoreStyle.h"
 
-void UWizardOsWaveWidget::SetWave(int32 WaveNumber, bool bIsBossWave)
+void UWizardOsWaveWidget::SetWave(int32 WaveNumber, bool bIsBossWave, int32 ChipCount)
 {
 	bBoss = bIsBossWave;
-	Label = bBoss ? FText::FromString(TEXT("BOSS WAVE")) :
+	const FText WaveLabel = bBoss ? FText::FromString(TEXT("BOSS WAVE")) :
 		FText::Format(FText::FromString(TEXT("WAVE {0}")), WaveNumber);
+	Label = FText::Format(FText::FromString(TEXT("{0}\nCHIPS: {1}")), WaveLabel, ChipCount);
 }
 
 int32 UWizardOsWaveWidget::NativePaint(const FPaintArgs& Args, const FGeometry& AllottedGeometry,

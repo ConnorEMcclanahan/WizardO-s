@@ -4,6 +4,7 @@
 
 #include "Components/SphereComponent.h"
 #include "Components/StaticMeshComponent.h"
+#include "EngineUtils.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "UObject/ConstructorHelpers.h"
 #include "WizardOsEnemy.h"
@@ -50,8 +51,63 @@ void AWizardOsProjectile::OnProjectileHit(UPrimitiveComponent* HitComponent, AAc
 {
 	if (AWizardOsEnemy* Enemy = Cast<AWizardOsEnemy>(OtherActor))
 	{
-		Enemy->TakeWizardDamage(Damage);
+		if (bExplosive)
+		{
+			TArray<TObjectPtr<AWizardOsEnemy>> EnemiesInBlast;
+			for (TActorIterator<AWizardOsEnemy> It(GetWorld()); It; ++It)
+			{
+				if (FVector::DistSquared(It->GetActorLocation(), GetActorLocation()) <= FMath::Square(ExplosionRadius))
+				{
+					EnemiesInBlast.Add(*It);
+				}
+			}
+
+			for (AWizardOsEnemy* BlastTarget : EnemiesInBlast)
+			{
+				BlastTarget->TakeWizardDamage(Damage);
+			}
+		}
+		else if (RemainingChainJumps > 0)
+		{
+			if (AWizardOsEnemy* NextTarget = FindNextChainTarget(Enemy))
+			{
+				--RemainingChainJumps;
+				Enemy->TakeWizardDamage(Damage);
+				Collision->IgnoreActorWhenMoving(Enemy, true);
+				SetActorLocation(Hit.ImpactPoint);
+				SetTarget(NextTarget);
+				return;
+			}
+
+			Enemy->TakeWizardDamage(Damage);
+		}
+		else
+		{
+			Enemy->TakeWizardDamage(Damage);
+		}
 	}
 
 	Destroy();
+}
+
+AWizardOsEnemy* AWizardOsProjectile::FindNextChainTarget(const AWizardOsEnemy* HitEnemy) const
+{
+	AWizardOsEnemy* NextTarget = nullptr;
+	float ClosestDistanceSquared = FMath::Square(800.f);
+	for (TActorIterator<AWizardOsEnemy> It(GetWorld()); It; ++It)
+	{
+		if (*It == HitEnemy)
+		{
+			continue;
+		}
+
+		const float DistanceSquared = FVector::DistSquared2D(HitEnemy->GetActorLocation(), It->GetActorLocation());
+		if (DistanceSquared < ClosestDistanceSquared)
+		{
+			ClosestDistanceSquared = DistanceSquared;
+			NextTarget = *It;
+		}
+	}
+
+	return NextTarget;
 }

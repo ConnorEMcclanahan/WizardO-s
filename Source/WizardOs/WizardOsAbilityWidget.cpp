@@ -9,65 +9,26 @@
 #include "Components/CanvasPanelSlot.h"
 #include "Components/HorizontalBox.h"
 #include "Components/HorizontalBoxSlot.h"
+#include "Components/Image.h"
 #include "Components/SizeBox.h"
-#include "Components/Spacer.h"
-#include "Components/TextBlock.h"
 #include "Components/VerticalBox.h"
 #include "Components/VerticalBoxSlot.h"
-#include "Styling/CoreStyle.h"
+#include "Engine/Texture2D.h"
 #include "WizardOsCharacter.h"
 
 namespace
 {
-UTextBlock* CreateCardText(UWidgetTree* WidgetTree, const FName Name, const FString& Text,
-	const FLinearColor& Color, int32 FontSize)
-{
-	UTextBlock* Label = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass(), Name);
-	Label->SetText(FText::FromString(Text));
-	Label->SetColorAndOpacity(FSlateColor(Color));
-	Label->SetFont(FSlateFontInfo(FCoreStyle::GetDefaultFontStyle(TEXT("Bold"), FontSize)));
-	Label->SetJustification(ETextJustify::Center);
-	return Label;
-}
-
-UButton* CreateUpgradeCard(UWidgetTree* WidgetTree, const FName Name, const FString& Suit,
-	const FString& Title, const FString& Effect, const FString& Description, const FLinearColor& FaceColor,
-	const FLinearColor& AccentColor)
+UButton* CreateUpgradeCard(UWidgetTree* WidgetTree, const FName Name, UTexture2D* CardArt)
 {
 	UButton* Button = WidgetTree->ConstructWidget<UButton>(UButton::StaticClass(), Name);
 	Button->SetBackgroundColor(FLinearColor::Transparent);
 
 	USizeBox* SizeBox = WidgetTree->ConstructWidget<USizeBox>(USizeBox::StaticClass(), *FString::Printf(TEXT("%sSize"), *Name.ToString()));
 	SizeBox->SetWidthOverride(220.f);
-	SizeBox->SetHeightOverride(360.f);
-
-	UBorder* Frame = WidgetTree->ConstructWidget<UBorder>(UBorder::StaticClass(), *FString::Printf(TEXT("%sFrame"), *Name.ToString()));
-	Frame->SetBrushColor(FLinearColor(0.86f, 0.77f, 0.61f));
-	Frame->SetPadding(FMargin(5.f));
-	UBorder* Card = WidgetTree->ConstructWidget<UBorder>(UBorder::StaticClass(), *FString::Printf(TEXT("%sFace"), *Name.ToString()));
-	Card->SetBrushColor(FaceColor);
-	Card->SetPadding(FMargin(12.f));
-	UVerticalBox* Contents = WidgetTree->ConstructWidget<UVerticalBox>(UVerticalBox::StaticClass(), *FString::Printf(TEXT("%sContents"), *Name.ToString()));
-	Card->SetContent(Contents);
-
-	UTextBlock* SuitLabel = CreateCardText(WidgetTree, *FString::Printf(TEXT("%sSuit"), *Name.ToString()), Suit, AccentColor, 22);
-	SuitLabel->SetJustification(ETextJustify::Left);
-	Contents->AddChildToVerticalBox(SuitLabel);
-	Contents->AddChildToVerticalBox(WidgetTree->ConstructWidget<USpacer>(USpacer::StaticClass(), *FString::Printf(TEXT("%sArtSpace"), *Name.ToString())))
-		->SetSize(FSlateChildSize(ESlateSizeRule::Fill));
-
-	UBorder* NamePlate = WidgetTree->ConstructWidget<UBorder>(UBorder::StaticClass(), *FString::Printf(TEXT("%sNamePlate"), *Name.ToString()));
-	NamePlate->SetBrushColor(FLinearColor(0.005f, 0.008f, 0.02f, 0.94f));
-	NamePlate->SetPadding(FMargin(6.f));
-	UVerticalBox* NamePlateContents = WidgetTree->ConstructWidget<UVerticalBox>(UVerticalBox::StaticClass(), *FString::Printf(TEXT("%sNamePlateContents"), *Name.ToString()));
-	NamePlate->SetContent(NamePlateContents);
-	NamePlateContents->AddChildToVerticalBox(CreateCardText(WidgetTree, *FString::Printf(TEXT("%sTitle"), *Name.ToString()), Title, FLinearColor(0.95f, 0.84f, 0.72f), 18));
-	NamePlateContents->AddChildToVerticalBox(CreateCardText(WidgetTree, *FString::Printf(TEXT("%sEffect"), *Name.ToString()), Effect, AccentColor, 14));
-	NamePlateContents->AddChildToVerticalBox(CreateCardText(WidgetTree, *FString::Printf(TEXT("%sDescription"), *Name.ToString()), Description, FLinearColor(0.9f, 0.9f, 0.92f), 12));
-	Contents->AddChildToVerticalBox(NamePlate);
-
-	Frame->SetContent(Card);
-	SizeBox->SetContent(Frame);
+	SizeBox->SetHeightOverride(342.f);
+	UImage* Artwork = WidgetTree->ConstructWidget<UImage>(UImage::StaticClass(), *FString::Printf(TEXT("%sArtwork"), *Name.ToString()));
+	Artwork->SetBrushFromTexture(CardArt, true);
+	SizeBox->SetContent(Artwork);
 	Button->SetContent(SizeBox);
 	return Button;
 }
@@ -91,6 +52,23 @@ void UWizardOsAbilityWidget::Configure(AWizardOsCharacter* InOwnerCharacter)
 void UWizardOsAbilityWidget::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
+
+	if (WidgetTree->RootWidget)
+	{
+		RapidCastingButton = Cast<UButton>(GetWidgetFromName(TEXT("RapidCasting")));
+		EmpoweredBoltButton = Cast<UButton>(GetWidgetFromName(TEXT("EmpoweredBolt")));
+		VitalityButton = Cast<UButton>(GetWidgetFromName(TEXT("Vitality")));
+
+		if (RapidCastingButton && EmpoweredBoltButton && VitalityButton)
+		{
+			RapidCastingButton->OnClicked.AddUniqueDynamic(this, &UWizardOsAbilityWidget::SelectRapidCasting);
+			EmpoweredBoltButton->OnClicked.AddUniqueDynamic(this, &UWizardOsAbilityWidget::SelectEmpoweredBolt);
+			VitalityButton->OnClicked.AddUniqueDynamic(this, &UWizardOsAbilityWidget::SelectVitality);
+			return;
+		}
+
+		WidgetTree->RootWidget = nullptr;
+	}
 
 	UCanvasPanel* Root = WidgetTree->ConstructWidget<UCanvasPanel>(UCanvasPanel::StaticClass(), TEXT("RewardScreen"));
 	WidgetTree->RootWidget = Root;
@@ -116,33 +94,29 @@ void UWizardOsAbilityWidget::NativeOnInitialized()
 	RewardPanelSlot->SetAlignment(FVector2D(0.5f, 0.5f));
 	RewardPanelSlot->SetPosition(FVector2D::ZeroVector);
 
-	Choices->AddChildToVerticalBox(CreateCardText(WidgetTree, TEXT("Title"),
-		TEXT("PICK AN UPGRADE"), FLinearColor(0.95f, 0.84f, 0.72f), 32));
-	Choices->AddChildToVerticalBox(CreateCardText(WidgetTree, TEXT("Subtitle"),
-		TEXT("New cards. New tricks. Stronger hands."), FLinearColor(0.45f, 0.7f, 1.f), 16));
-
 	UHorizontalBox* Cards = WidgetTree->ConstructWidget<UHorizontalBox>(UHorizontalBox::StaticClass(), TEXT("Cards"));
 	Choices->AddChildToVerticalBox(Cards);
 
-	RapidCastingButton = CreateUpgradeCard(WidgetTree, TEXT("RapidCasting"), TEXT("K\nSPADE"),
-		TEXT("ARCANE TEMPO"), TEXT("+25% ATTACK SPEED"), TEXT("Throw your spell cards faster."),
-		FLinearColor(0.025f, 0.07f, 0.17f), FLinearColor(0.25f, 0.9f, 0.75f));
+	UTexture2D* FastHandsArt = LoadObject<UTexture2D>(nullptr,
+		TEXT("/Game/UI/AbilityCards/clovercard.clovercard"));
+	UTexture2D* SharpCardsArt = LoadObject<UTexture2D>(nullptr,
+		TEXT("/Game/UI/AbilityCards/QVKrxeqj.QVKrxeqj"));
+	UTexture2D* SecondWindArt = LoadObject<UTexture2D>(nullptr,
+		TEXT("/Game/UI/AbilityCards/heartcard.heartcard"));
+
+	RapidCastingButton = CreateUpgradeCard(WidgetTree, TEXT("RapidCasting"), FastHandsArt);
 	RapidCastingButton->OnClicked.AddDynamic(this, &UWizardOsAbilityWidget::SelectRapidCasting);
 	UHorizontalBoxSlot* RapidSlot = Cards->AddChildToHorizontalBox(RapidCastingButton);
 	RapidSlot->SetSize(FSlateChildSize(ESlateSizeRule::Fill));
 	RapidSlot->SetPadding(FMargin(8.f));
 
-	EmpoweredBoltButton = CreateUpgradeCard(WidgetTree, TEXT("EmpoweredBolt"), TEXT("A\nDIAMOND"),
-		TEXT("STARFIRE"), TEXT("+2 CARD DAMAGE"), TEXT("A deadlier hand of spell cards."),
-		FLinearColor(0.17f, 0.02f, 0.04f), FLinearColor(1.f, 0.45f, 0.35f));
+	EmpoweredBoltButton = CreateUpgradeCard(WidgetTree, TEXT("EmpoweredBolt"), SharpCardsArt);
 	EmpoweredBoltButton->OnClicked.AddDynamic(this, &UWizardOsAbilityWidget::SelectEmpoweredBolt);
 	UHorizontalBoxSlot* BoltSlot = Cards->AddChildToHorizontalBox(EmpoweredBoltButton);
 	BoltSlot->SetSize(FSlateChildSize(ESlateSizeRule::Fill));
 	BoltSlot->SetPadding(FMargin(8.f));
 
-	VitalityButton = CreateUpgradeCard(WidgetTree, TEXT("Vitality"), TEXT("10\nCLUB"),
-		TEXT("SECOND WIND"), TEXT("+5 HEALTH, +2 MAX"), TEXT("Stay in the game a little longer."),
-		FLinearColor(0.01f, 0.13f, 0.1f), FLinearColor(0.4f, 1.f, 0.6f));
+	VitalityButton = CreateUpgradeCard(WidgetTree, TEXT("Vitality"), SecondWindArt);
 	VitalityButton->OnClicked.AddDynamic(this, &UWizardOsAbilityWidget::SelectVitality);
 	UHorizontalBoxSlot* VitalSlot = Cards->AddChildToHorizontalBox(VitalityButton);
 	VitalSlot->SetSize(FSlateChildSize(ESlateSizeRule::Fill));

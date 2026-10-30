@@ -17,6 +17,8 @@
 #include "WizardOsEnemy.h"
 #include "WizardOsAbilityWidget.h"
 #include "WizardOsHealthBar.h"
+#include "WizardOsHomeWidget.h"
+#include "WizardOsMerchantWidget.h"
 #include "WizardOsProjectile.h"
 #include "WizardOsWaveWidget.h"
 
@@ -83,6 +85,7 @@ void AWizardOsCharacter::BeginPlay()
 		PlayerHealthBar->SetPositionInViewport(FVector2D(24.f, 24.f));
 		PlayerHealthBar->AddToViewport();
 		UpdateHealthBar();
+		PlayerHealthBar->SetVisibility(ESlateVisibility::Hidden);
 
 		WaveWidget = CreateWidget<UWizardOsWaveWidget>(PlayerController);
 		WaveWidget->SetDesiredSizeInViewport(FVector2D(180.f, 40.f));
@@ -90,11 +93,12 @@ void AWizardOsCharacter::BeginPlay()
 		WaveWidget->SetPositionInViewport(FVector2D(-24.f, 24.f), true);
 		WaveWidget->AddToViewport();
 		UpdateWaveWidget();
+		WaveWidget->SetVisibility(ESlateVisibility::Hidden);
 	}
 
 	if (HasAuthority())
 	{
-		StartCurrentWave();
+		ShowHomeScreen();
 	}
 }
 
@@ -113,7 +117,14 @@ void AWizardOsCharacter::ShowAbilityChoices()
 
 	if (APlayerController* PlayerController = Cast<APlayerController>(GetController()))
 	{
-		AbilityWidget = CreateWidget<UWizardOsAbilityWidget>(PlayerController);
+		TSubclassOf<UWizardOsAbilityWidget> AbilityWidgetClass = UWizardOsAbilityWidget::StaticClass();
+		if (TSubclassOf<UWizardOsAbilityWidget> DesignerWidgetClass = LoadClass<UWizardOsAbilityWidget>(
+			nullptr, TEXT("/Game/UI/WBP_AbilityChoices.WBP_AbilityChoices_C")))
+		{
+			AbilityWidgetClass = DesignerWidgetClass;
+		}
+
+		AbilityWidget = CreateWidget<UWizardOsAbilityWidget>(PlayerController, AbilityWidgetClass);
 		AbilityWidget->Configure(this);
 
 		int32 ViewportWidth;
@@ -159,19 +170,188 @@ void AWizardOsCharacter::ApplyAbility(int32 AbilityIndex)
 
 	AbilityWidget->RemoveFromParent();
 	AbilityWidget = nullptr;
-	bWaitingForUpgrade = false;
-	++CurrentWave;
-	StartCurrentWave();
+
+	if (FMath::FRand() < MerchantVisitChance)
+	{
+		ShowMerchant();
+	}
+	else
+	{
+		ContinueToNextWave();
+	}
 }
 
-void AWizardOsCharacter::NotifyEnemyDefeated()
+void AWizardOsCharacter::NotifyEnemyDefeated(int32 ChipsEarned)
 {
+	PocketChips += FMath::Max(0, ChipsEarned);
+	UpdateWaveWidget();
 	RemainingEnemies = FMath::Max(0, RemainingEnemies - 1);
 	if (RemainingEnemies == 0 && !bWaitingForUpgrade)
 	{
 		bWaitingForUpgrade = true;
 		ShowAbilityChoices();
 	}
+}
+
+void AWizardOsCharacter::ShowMerchant()
+{
+	if (MerchantWidget)
+	{
+		return;
+	}
+
+	if (APlayerController* PlayerController = Cast<APlayerController>(GetController()))
+	{
+		TSubclassOf<UWizardOsMerchantWidget> MerchantWidgetClass = UWizardOsMerchantWidget::StaticClass();
+		if (TSubclassOf<UWizardOsMerchantWidget> DesignerWidgetClass = LoadClass<UWizardOsMerchantWidget>(
+			nullptr, TEXT("/Game/UI/WBP_MerchantShop.WBP_MerchantShop_C")))
+		{
+			MerchantWidgetClass = DesignerWidgetClass;
+		}
+
+		MerchantWidget = CreateWidget<UWizardOsMerchantWidget>(PlayerController, MerchantWidgetClass);
+		MerchantWidget->Configure(this);
+
+		int32 ViewportWidth;
+		int32 ViewportHeight;
+		PlayerController->GetViewportSize(ViewportWidth, ViewportHeight);
+		MerchantWidget->SetDesiredSizeInViewport(FVector2D(ViewportWidth, ViewportHeight));
+		MerchantWidget->SetAlignmentInViewport(FVector2D::ZeroVector);
+		MerchantWidget->SetPositionInViewport(FVector2D::ZeroVector);
+		MerchantWidget->AddToViewport(100);
+
+		FInputModeGameAndUI InputMode;
+		InputMode.SetHideCursorDuringCapture(false);
+		PlayerController->SetInputMode(InputMode);
+		PlayerController->bShowMouseCursor = true;
+	}
+}
+
+void AWizardOsCharacter::ShowHomeScreen()
+{
+	if (HomeWidget)
+	{
+		return;
+	}
+
+	if (APlayerController* PlayerController = Cast<APlayerController>(GetController()))
+	{
+		TSubclassOf<UWizardOsHomeWidget> HomeWidgetClass = UWizardOsHomeWidget::StaticClass();
+		if (TSubclassOf<UWizardOsHomeWidget> DesignerWidgetClass = LoadClass<UWizardOsHomeWidget>(
+			nullptr, TEXT("/Game/UI/WBP_HomeScreen.WBP_HomeScreen_C")))
+		{
+			HomeWidgetClass = DesignerWidgetClass;
+		}
+
+		HomeWidget = CreateWidget<UWizardOsHomeWidget>(PlayerController, HomeWidgetClass);
+		HomeWidget->Configure(this);
+		HomeWidget->AddToViewport(200);
+
+		FInputModeUIOnly InputMode;
+		InputMode.SetWidgetToFocus(HomeWidget->TakeWidget());
+		PlayerController->SetInputMode(InputMode);
+		PlayerController->bShowMouseCursor = true;
+	}
+}
+
+void AWizardOsCharacter::StartGameFromHome()
+{
+	if (bGameStarted)
+	{
+		return;
+	}
+
+	bGameStarted = true;
+	if (HomeWidget)
+	{
+		HomeWidget->RemoveFromParent();
+		HomeWidget = nullptr;
+	}
+
+	if (PlayerHealthBar)
+	{
+		PlayerHealthBar->SetVisibility(ESlateVisibility::Visible);
+	}
+	if (WaveWidget)
+	{
+		WaveWidget->SetVisibility(ESlateVisibility::Visible);
+	}
+
+	if (APlayerController* PlayerController = Cast<APlayerController>(GetController()))
+	{
+		PlayerController->SetInputMode(FInputModeGameOnly());
+		PlayerController->bShowMouseCursor = false;
+	}
+
+	StartCurrentWave();
+}
+
+void AWizardOsCharacter::BuyMerchantItem(int32 ItemIndex)
+{
+	static constexpr int32 ItemCosts[] = { 5, 7, 6 };
+	if (ItemIndex < 0 || ItemIndex >= UE_ARRAY_COUNT(ItemCosts) || IsMerchantItemOwned(ItemIndex) ||
+		PocketChips < ItemCosts[ItemIndex])
+	{
+		return;
+	}
+
+	PocketChips -= ItemCosts[ItemIndex];
+	switch (ItemIndex)
+	{
+	case 0:
+		bHasChainSpark = true;
+		break;
+	case 1:
+		bHasRunebomb = true;
+		break;
+	case 2:
+		bHasTwinCast = true;
+		break;
+	default:
+		return;
+	}
+
+	UpdateWaveWidget();
+	LeaveMerchant();
+}
+
+bool AWizardOsCharacter::IsMerchantItemOwned(int32 ItemIndex) const
+{
+	switch (ItemIndex)
+	{
+	case 0:
+		return bHasChainSpark;
+	case 1:
+		return bHasRunebomb;
+	case 2:
+		return bHasTwinCast;
+	default:
+		return false;
+	}
+}
+
+void AWizardOsCharacter::LeaveMerchant()
+{
+	if (MerchantWidget)
+	{
+		MerchantWidget->RemoveFromParent();
+		MerchantWidget = nullptr;
+	}
+
+	ContinueToNextWave();
+}
+
+void AWizardOsCharacter::ContinueToNextWave()
+{
+	if (APlayerController* PlayerController = Cast<APlayerController>(GetController()))
+	{
+		PlayerController->SetInputMode(FInputModeGameOnly());
+		PlayerController->bShowMouseCursor = false;
+	}
+
+	bWaitingForUpgrade = false;
+	++CurrentWave;
+	StartCurrentWave();
 }
 
 void AWizardOsCharacter::Tick(float DeltaSeconds)
@@ -260,11 +440,17 @@ void AWizardOsCharacter::FireAt(AWizardOsEnemy* Enemy)
 	SpawnParameters.Instigator = this;
 	SpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	const FVector SpawnLocation = GetActorLocation() + Direction * 100.f;
-	if (AWizardOsProjectile* Projectile = GetWorld()->SpawnActor<AWizardOsProjectile>(
-		AWizardOsProjectile::StaticClass(), SpawnLocation, Direction.Rotation(), SpawnParameters))
+	const int32 ShotCount = bHasTwinCast && FMath::FRand() < 0.3f ? 2 : 1;
+	for (int32 ShotIndex = 0; ShotIndex < ShotCount; ++ShotIndex)
 	{
-		Projectile->SetDamage(ProjectileDamage);
-		Projectile->SetTarget(Enemy);
+		if (AWizardOsProjectile* Projectile = GetWorld()->SpawnActor<AWizardOsProjectile>(
+			AWizardOsProjectile::StaticClass(), SpawnLocation, Direction.Rotation(), SpawnParameters))
+		{
+			Projectile->SetDamage(ProjectileDamage);
+			Projectile->SetChainJumps(bHasChainSpark ? 2 : 0);
+			Projectile->SetExplosive(bHasRunebomb && FMath::FRand() < 0.25f);
+			Projectile->SetTarget(Enemy);
+		}
 	}
 	LastFireTime = GetWorld()->GetTimeSeconds();
 }
@@ -351,6 +537,6 @@ void AWizardOsCharacter::UpdateWaveWidget()
 {
 	if (WaveWidget)
 	{
-		WaveWidget->SetWave(CurrentWave, CurrentWave >= 3);
+		WaveWidget->SetWave(CurrentWave, CurrentWave >= 3, PocketChips);
 	}
 }
